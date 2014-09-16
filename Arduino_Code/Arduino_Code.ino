@@ -20,6 +20,7 @@ int bin6=0; // 6th binary digit (2^-3)
 int time=0;  // initialize time to mark each second
 int time1=0;  // initialize time to track time since last lcd update
 float shiftvoltage=-2.5; // value of voltage used to shift signal going into and out of arduino
+int absvoltageint=0;
 
 void setup()
 {
@@ -33,7 +34,7 @@ void loop()
 {
   input=analogRead(inputpin); // read input voltage of a scale of 0 to 1023
   inputvoltage=input*5*.00097752;  // convert input from 0 to 1023 to 0 to 5
-  actualvoltage=(inputvoltage-2.5)*2.5; // unshift and undo gain to obtain input to circuit
+  actualvoltage=(inputvoltage+shiftvoltage)*2.5; // unshift and undo gain to obtain input to circuit
   if (actualvoltage>5)  // if the calculated voltage is above 5V
   {
     actualvoltage=5;  // read values greater than 5 V as 5V
@@ -43,6 +44,8 @@ void loop()
     actualvoltage=-5;  // read values less than -5 V as -5 V
   }
   absvoltage=abs(actualvoltage); //absolute value of voltage;
+  absvoltageint=8*absvoltage+.25; // begin rounding to nearest 1/8
+  absvoltage=(absvoltageint)*.125; // finish rounding
   if (absvoltage>=4)  // if |Vin|>4
   {
     bin1=1; // first binary voltage=1
@@ -91,7 +94,7 @@ void loop()
   if (absvoltage>=.125) // if magnitude of voltage remaining after prior stages>.125
   {
     bin6=1; // 6th digit of binary number=1
-    //absvoltage=absvoltage-.125;
+    absvoltage=absvoltage-.125;
   }
   else
   {
