@@ -20,14 +20,14 @@ int bin6=0; // 6th binary digit (2^-3)
 int time=0;  // initialize time to mark each second
 int time1=0;  // initialize time to track time since last lcd update
 float shiftvoltage=-2.5; // value of voltage used to shift signal going into and out of arduino
-int absvoltageint=0;
+int absvoltageint=0;  // integer number to be used for rounding absolute voltage
 
 void setup()
 {
   lcd.begin(16,2);  // initialize lcd
   pinMode(inputpin,INPUT);  // set A0 to input
   pinMode(outputpin,OUTPUT); // set A1 to output
-  Serial.begin(9600);
+  Serial.begin(9600);  // initialize serial print to use for troubleshooting
 }
 
 void loop()
@@ -124,5 +124,5 @@ void loop()
   }
   output=(actualvoltage*.5-shiftvoltage)*255*.2; // convert -5 to 5 volt scale to 0 to 255 scale
   analogWrite(outputpin,output);  // send the output to PWM pin
-  Serial.println(actualvoltage);
+  Serial.println(actualvoltage);  // can use to monitor voltage calculations in arduino
 }
